@@ -13,6 +13,6 @@ public interface RoleService {
     boolean save(Role role);
     PageVo<Role> queryByPage(int page, int limit);
     List<Role> queryAll();
-
+    List<Integer> selectByUid(int uid);
 
 }

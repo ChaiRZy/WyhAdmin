@@ -12,13 +12,14 @@
   <sql id="Base_Column_List">
     id, name, per, icon, type, parentid
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from t_resource
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteById" parameterType="java.lang.Integer">
     delete from t_resource
     where id = #{id,jdbcType=INTEGER}
   </delete>
@@ -30,71 +31,8 @@
       #{icon,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{parentid,jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.feri.wyh10000.admin.entity.Resource">
-    insert into t_resource
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="name != null">
-        name,
-      </if>
-      <if test="per != null">
-        per,
-      </if>
-      <if test="icon != null">
-        icon,
-      </if>
-      <if test="type != null">
-        type,
-      </if>
-      <if test="parentid != null">
-        parentid,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="name != null">
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="per != null">
-        #{per,jdbcType=VARCHAR},
-      </if>
-      <if test="icon != null">
-        #{icon,jdbcType=VARCHAR},
-      </if>
-      <if test="type != null">
-        #{type,jdbcType=INTEGER},
-      </if>
-      <if test="parentid != null">
-        #{parentid,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.feri.wyh10000.admin.entity.Resource">
-    update t_resource
-    <set>
-      <if test="name != null">
-        name = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="per != null">
-        per = #{per,jdbcType=VARCHAR},
-      </if>
-      <if test="icon != null">
-        icon = #{icon,jdbcType=VARCHAR},
-      </if>
-      <if test="type != null">
-        type = #{type,jdbcType=INTEGER},
-      </if>
-      <if test="parentid != null">
-        parentid = #{parentid,jdbcType=INTEGER},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.feri.wyh10000.admin.entity.Resource">
+
+  <update id="updateById" parameterType="com.feri.wyh10000.admin.entity.Resource">
     update t_resource
     set name = #{name,jdbcType=VARCHAR},
       per = #{per,jdbcType=VARCHAR},
@@ -103,4 +41,30 @@
       parentid = #{parentid,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="queryByUserName" resultType="com.feri.wyh10000.admin.entity.Resource">
+    select r.* from  t_resource r
+    left join t_roleresource rr on r.id=rr.resid
+    left join t_adminrole ur on ur.rid=rr.rid
+    left join t_admin u on ur.aid=u.id
+    where r.type=1 and u.name=#{name} order by r.parentid,r.id;
+  </select>
+  <select id="selectByAid" resultType="com.feri.wyh10000.admin.entity.Resource">
+   select r.* from  t_resource r
+      left join t_roleresource rr on r.id=rr.resid
+      left join t_adminrole ur on ur.rid=rr.rid
+      left join t_admin u on ur.aid=u.id
+      where r.type=2 and u.id=#{aid} order by r.id ;
+  </select>
+
+  <select id="selectByPid" resultType="com.feri.wyh10000.admin.entity.Resource">
+    select * from t_resource where type=1 and parentid=-1 order by id;
+  </select>
+
+  <select id="selectByPage" resultType="com.feri.wyh10000.admin.entity.Resource">
+    select * from t_resource limit #{index},#{count}
+  </select>
+  <select id="selectCount" resultType="int">
+    select COUNT(*) from t_resource;
+  </select>
 </mapper>

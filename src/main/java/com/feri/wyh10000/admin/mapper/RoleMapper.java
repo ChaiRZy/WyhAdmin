@@ -1,17 +1,17 @@
 package com.feri.wyh10000.admin.mapper;
 
 import com.feri.wyh10000.admin.entity.Role;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface RoleMapper {
-    int deleteByPrimaryKey(Integer id);
-
+    int deleteById(Integer id);
     int insert(Role record);
-
-    int insertSelective(Role record);
-
-    Role selectByPrimaryKey(Integer id);
-
-    int updateByPrimaryKeySelective(Role record);
-
-    int updateByPrimaryKey(Role record);
+    Role selectById(Integer id);
+    int updateById(Role record);
+    List<Role> selectByPage(@Param("index") int index, @Param("count") int count);
+    int selectCount();
+    List<Role> selectAll();
+    List<Integer> selectByUid(int uid);
 }
